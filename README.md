@@ -59,8 +59,6 @@ Dưới đây là các phần mềm bạn cần cài đặt trước khi chạy 
 -   [MySQL Server](https://www.mysql.com/downloads/)
 
 ### Cấu hình
-
-Bạn cần thiết lập các thông tin trong file `src/main/resources/application.properties` để dự án có thể kết nối tới database.
     ```properties
     # Cổng chạy của DỊCH VỤ ADMIN
     server.port=8081
