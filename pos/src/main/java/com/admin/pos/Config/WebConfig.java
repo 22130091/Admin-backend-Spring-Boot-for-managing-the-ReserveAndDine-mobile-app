@@ -21,7 +21,7 @@ public class WebConfig {
             // cho phép tất cả các method
             .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
             .allowedHeaders("*")
-            .allowCredentials(true);
+            .allowCredentials(false);
       }
     };
   }
