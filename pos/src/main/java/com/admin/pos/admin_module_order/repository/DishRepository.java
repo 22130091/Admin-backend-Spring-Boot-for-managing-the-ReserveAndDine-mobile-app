@@ -24,6 +24,6 @@ public interface DishRepository extends JpaRepository<Dish, Integer> {
     @Query("SELECT d FROM Dish d JOIN d.allergens a WHERE a.id = :allergenId")
     List<Dish> findByAllergenId(@Param("allergenId") Integer allergenId);
 
-    @Query("SELECT d FROM Dish d JOIN d.ingredients i WHERE i.id = :ingredientId")
+    @Query("SELECT d FROM Dish d JOIN d.dishIngredients di WHERE di.ingredient.id = :ingredientId")
     List<Dish> findByIngredientId(@Param("ingredientId") Integer ingredientId);
 }

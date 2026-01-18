@@ -25,9 +25,9 @@ public class Ingredient {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @ManyToMany(mappedBy = "ingredients")
+    @OneToMany(mappedBy = "ingredient")
     @JsonIgnore
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Set<Dish> dishes = new HashSet<>();
+    private Set<DishIngredient> dishIngredients = new HashSet<>();
 }

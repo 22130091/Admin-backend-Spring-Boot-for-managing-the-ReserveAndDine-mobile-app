@@ -6,15 +6,17 @@ import org.mapstruct.*;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", uses = {AllergenMapper.class, IngredientMapper.class})
+@Mapper(componentModel = "spring", uses = {AllergenMapper.class, DishIngredientMapper.class})
 public interface DishMapper {
 
     @Mapping(source = "category.id", target = "categoryId")
     @Mapping(source = "category.name", target = "categoryName")
+    @Mapping(source = "dishIngredients", target = "ingredients")
     DishDTO toDTO(Dish dish);
 
     @Mapping(source = "categoryId", target = "category.id")
     @Mapping(target = "orderItems", ignore = true)
+    @Mapping(target = "dishIngredients", ignore = true)
     Dish toEntity(DishDTO dishDTO);
 
     List<DishDTO> toDTOList(List<Dish> dishes);
@@ -23,6 +25,7 @@ public interface DishMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "orderItems", ignore = true)
+    @Mapping(target = "dishIngredients", ignore = true)
     void updateEntityFromDTO(DishDTO dishDTO, @MappingTarget Dish dish);
 }
 

@@ -104,9 +104,11 @@ public class DishServiceImpl implements DishService {
         if (dishDTO.getAllergens() != null && !dishDTO.getAllergens().isEmpty()) {
             Set<Allergen> allergens = new HashSet<>();
             dishDTO.getAllergens().forEach(allergenDTO -> {
-                Allergen allergen = allergenRepository.findById(allergenDTO.getId())
-                        .orElseThrow(() -> new ResourceNotFoundException("Allergen not found with id: " + allergenDTO.getId()));
-                allergens.add(allergen);
+                if (allergenDTO.getId() != null) {
+                    Allergen allergen = allergenRepository.findById(allergenDTO.getId())
+                            .orElseThrow(() -> new ResourceNotFoundException("Allergen not found with id: " + allergenDTO.getId()));
+                    allergens.add(allergen);
+                }
             });
             savedDish.setAllergens(allergens);
         }
@@ -117,15 +119,17 @@ public class DishServiceImpl implements DishService {
         // Handle ingredients and their quantities
         if (dishDTO.getIngredients() != null && !dishDTO.getIngredients().isEmpty()) {
             for (DishIngredientDTO diDTO : dishDTO.getIngredients()) {
-                Ingredient ingredient = ingredientRepository.findById(diDTO.getIngredientId())
-                        .orElseThrow(() -> new ResourceNotFoundException("Ingredient not found with id: " + diDTO.getIngredientId()));
+                if (diDTO.getIngredientId() != null) {
+                    Ingredient ingredient = ingredientRepository.findById(diDTO.getIngredientId())
+                            .orElseThrow(() -> new ResourceNotFoundException("Ingredient not found with id: " + diDTO.getIngredientId()));
 
-                DishIngredient dishIngredient = new DishIngredient();
-                dishIngredient.setDish(savedDish);
-                dishIngredient.setIngredient(ingredient);
-                dishIngredient.setQuantity(diDTO.getQuantity());
+                    DishIngredient dishIngredient = new DishIngredient();
+                    dishIngredient.setDish(savedDish);
+                    dishIngredient.setIngredient(ingredient);
+                    dishIngredient.setQuantity(diDTO.getQuantity());
 
-                dishIngredientRepository.save(dishIngredient);
+                    dishIngredientRepository.save(dishIngredient);
+                }
             }
         }
 
@@ -152,9 +156,11 @@ public class DishServiceImpl implements DishService {
         if (dishDTO.getAllergens() != null) {
             existingDish.getAllergens().clear();
             dishDTO.getAllergens().forEach(allergenDTO -> {
-                Allergen allergen = allergenRepository.findById(allergenDTO.getId())
-                        .orElseThrow(() -> new ResourceNotFoundException("Allergen not found with id: " + allergenDTO.getId()));
-                existingDish.getAllergens().add(allergen);
+                if (allergenDTO.getId() != null) {
+                    Allergen allergen = allergenRepository.findById(allergenDTO.getId())
+                            .orElseThrow(() -> new ResourceNotFoundException("Allergen not found with id: " + allergenDTO.getId()));
+                    existingDish.getAllergens().add(allergen);
+                }
             });
         }
 
@@ -169,15 +175,17 @@ public class DishServiceImpl implements DishService {
 
             // Add new dish-ingredient relationships
             for (DishIngredientDTO diDTO : dishDTO.getIngredients()) {
-                Ingredient ingredient = ingredientRepository.findById(diDTO.getIngredientId())
-                        .orElseThrow(() -> new ResourceNotFoundException("Ingredient not found with id: " + diDTO.getIngredientId()));
+                if (diDTO.getIngredientId() != null) {
+                    Ingredient ingredient = ingredientRepository.findById(diDTO.getIngredientId())
+                            .orElseThrow(() -> new ResourceNotFoundException("Ingredient not found with id: " + diDTO.getIngredientId()));
 
-                DishIngredient dishIngredient = new DishIngredient();
-                dishIngredient.setDish(updatedDish);
-                dishIngredient.setIngredient(ingredient);
-                dishIngredient.setQuantity(diDTO.getQuantity());
+                    DishIngredient dishIngredient = new DishIngredient();
+                    dishIngredient.setDish(updatedDish);
+                    dishIngredient.setIngredient(ingredient);
+                    dishIngredient.setQuantity(diDTO.getQuantity());
 
-                dishIngredientRepository.save(dishIngredient);
+                    dishIngredientRepository.save(dishIngredient);
+                }
             }
         }
 

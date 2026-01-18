@@ -12,7 +12,7 @@ public interface IngredientMapper {
 
     IngredientDTO toDTO(Ingredient ingredient);
 
-    @Mapping(target = "dishes", ignore = true)
+    @Mapping(target = "dishIngredients", ignore = true)
     Ingredient toEntity(IngredientDTO ingredientDTO);
 
     List<IngredientDTO> toDTOList(List<Ingredient> ingredients);
@@ -21,7 +21,7 @@ public interface IngredientMapper {
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "dishes", ignore = true)
+    @Mapping(target = "dishIngredients", ignore = true)
     void updateEntityFromDTO(IngredientDTO ingredientDTO, @MappingTarget Ingredient ingredient);
 }
 

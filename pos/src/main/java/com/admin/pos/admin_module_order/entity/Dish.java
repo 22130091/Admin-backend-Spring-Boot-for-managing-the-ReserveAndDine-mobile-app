@@ -37,7 +37,7 @@ public class Dish {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
 
-    @Column(name = "image_url")
+    @Column(name = "image_url", columnDefinition = "LONGTEXT")
     private String imageUrl;
 
     @Column(name = "is_vegetarian")
@@ -72,15 +72,11 @@ public class Dish {
     @ToString.Exclude
     private Set<Allergen> allergens = new HashSet<>();
 
-    @ManyToMany
-    @JoinTable(
-            name = "dish_ingredients",
-            joinColumns = @JoinColumn(name = "dish_id"),
-            inverseJoinColumns = @JoinColumn(name = "ingredient_id")
-    )
+    @OneToMany(mappedBy = "dish", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Set<Ingredient> ingredients = new HashSet<>();
+    private Set<DishIngredient> dishIngredients = new HashSet<>();
 
     @OneToMany(mappedBy = "dish")
     @JsonIgnore
