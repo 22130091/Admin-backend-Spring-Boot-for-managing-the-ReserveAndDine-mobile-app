@@ -16,6 +16,7 @@ public class DiningTable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "table_id")
   private Long tableId;
 
   @Column(nullable = false, unique = true)

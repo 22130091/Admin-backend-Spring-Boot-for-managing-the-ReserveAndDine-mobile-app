@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 public class DiningTableService {
 
   private final DiningTableRepository repository;
+  private final QRCodeService qrCodeService;
   private final DiningTableMapper mapper;
 
   public List<DiningTableResponse> getAll() {
@@ -34,7 +35,14 @@ public class DiningTableService {
       throw new BadRequestException("Table code already exists");
     }
     DiningTable table = mapper.toEntity(request);
-    return mapper.toResponse(repository.save(table));
+    table.setStatus(TableStatus.EMPTY);
+
+    // 1. Save DB trước để lấy tableId
+    DiningTable savedTable = repository.save(table);
+    // 2. Tạo QR Code theo tableId
+    qrCodeService.generateQrCode(savedTable.getTableCode());
+
+    return mapper.toResponse(savedTable);
   }
 
   public DiningTableResponse update(Long id, DiningTableRequest request) {
