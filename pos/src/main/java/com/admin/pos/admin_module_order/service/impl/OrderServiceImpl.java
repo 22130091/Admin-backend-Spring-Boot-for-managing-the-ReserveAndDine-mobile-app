@@ -11,6 +11,7 @@ import com.admin.pos.admin_module_order.mapper.OrderMapper;
 import com.admin.pos.admin_module_order.repository.DishRepository;
 import com.admin.pos.admin_module_order.repository.OrderItemRepository;
 import com.admin.pos.admin_module_order.repository.OrderRepository;
+import com.admin.pos.admin_module_order.service.NotificationService;
 import com.admin.pos.admin_module_order.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,7 @@ public class OrderServiceImpl implements OrderService {
     private final DishRepository dishRepository;
     private final OrderMapper orderMapper;
     private final OrderItemMapper orderItemMapper;
+    private final NotificationService notificationService;
 
     @Override
     public List<OrderDTO> getAllOrders() {
@@ -182,8 +184,16 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found with id: " + id));
 
+        Order.OrderStatus oldStatus = order.getStatus();
         order.setStatus(status);
-        return orderMapper.toDTO(orderRepository.save(order));
+        Order updatedOrder = orderRepository.save(order);
+
+        // Create notification if status changed
+        if (oldStatus != status && order.getCustomerId() != null) {
+            notificationService.createOrderStatusNotification(order.getCustomerId(), order.getId(), status);
+        }
+
+        return orderMapper.toDTO(updatedOrder);
     }
 
     @Override
@@ -191,8 +201,16 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found with id: " + id));
 
+        Order.PaymentStatus oldPaymentStatus = order.getPaymentStatus();
         order.setPaymentStatus(paymentStatus);
-        return orderMapper.toDTO(orderRepository.save(order));
+        Order updatedOrder = orderRepository.save(order);
+
+        // Create notification if payment status changed
+        if (oldPaymentStatus != paymentStatus && order.getCustomerId() != null) {
+            notificationService.createOrderPaymentNotification(order.getCustomerId(), order.getId(), paymentStatus);
+        }
+
+        return orderMapper.toDTO(updatedOrder);
     }
 
     @Override
